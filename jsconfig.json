@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "utils": [
+        "src/utils/index"
+      ],
+      "apollo": [
+        "src/apollo/index"
+      ],
+      "queries": [
+        "src/apollo/queries/index"
+      ],
+      "components/*": [
+        "src/components/*"
+      ],
+      "pages/*": [
+        "src/pages/*"
+      ],
+      "static": [
+        "src/static/index",
+        "src/static/*"
+      ],
+      "ownHooks": [
+        "src/ownHooks/index",
+        "src/ownHooks/*",
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
