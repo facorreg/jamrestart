@@ -12,28 +12,21 @@ const isBottomPage = () => {
 };
 
 const setLoadMoreProducts = ({
-  nbProductsToDisplay,
-  productsLength,
-  productLimit,
+  start,
+  limit,
   isLoadingMore,
   fetchMore,
-  setNbProductsToDisplay,
   setIsLoadingMore,
 }) => () => {
   if (!isBottomPage() || isLoadingMore) return;
 
-  if (nbProductsToDisplay >= productsLength) {
-    setIsLoadingMore(true);
-    fetchMore({
-      variables: {
-        start: productsLength,
-        limit: productLimit,
-        fetchPolicy: 'server-only',
-      },
-    }).finally(() => setIsLoadingMore(false));
-  }
-
-  setNbProductsToDisplay(nbProductsToDisplay + productLimit);
+  setIsLoadingMore(true);
+  fetchMore({
+    variables: {
+      start,
+      limit,
+    },
+  }).finally(() => setIsLoadingMore(false));
 };
 
 const useScrollHandler = (options) => {

@@ -1,41 +1,26 @@
 import { initializeApollo } from 'apollo';
-import { getProducts, getAccessories, getClothes } from 'queries';
+import { getProducts } from 'queries';
 
-const fetchProductsData = async (rawVariables = {}) => {
-  const productQueries = { getProducts, getAccessories, getClothes };
-  const defaultVariables = {
+const fetchProductsData = async (args) => {
+  const client = initializeApollo();
+  const { type } = args || {}
+  const variables = {
     limit: 10,
-  }
-
-  const variables = { ...defaultVariables, ...rawVariables }
-  const type = rawVariables?.where?.type;
-  console.log(type)
-
-  let queryName;
-  if (!type) queryName = 'getProducts';
-  else { queryName = type === 'clothes' ? 'getClothes' : 'getAccessories' };
-
-  console.log(productQueries[queryName])
-
-  const apolloClient = initializeApollo();
+    where: type ? { type } : {},
+  };
 
   try {
-    await apolloClient.query({
-      query: productQueries[queryName],
+    await client.query({
+      query: getProducts,
       variables,
     });
 
     return Promise.resolve({
-      initialApolloState: apolloClient.cache.extract(),
-      query: productQueries[queryName],
-      type: type || 'all',
-      variables: {
-        products: variables,
-      },
+      initialApolloState: client.extract(),
+      variables,
     });
 
   } catch (error) {
-    console.log(JSON.stringify(error, null, 2));
     return Promise.reject(error, 'Failed to get Products the from graphql endpoint');
   }
 };

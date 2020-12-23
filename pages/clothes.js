@@ -1,6 +1,6 @@
-import { ClothesHP } from 'pages/homepage';
+import Home from 'pages/homepage';
 import { getInitialProps } from 'static';
 
-export default ClothesHP;
+export default Home;
 
-ClothesHP.getInitialProps = getInitialProps({ where: { type: 'clothes' } });
+Home.getInitialProps = getInitialProps({ type: 'clothes' });

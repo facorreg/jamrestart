@@ -1,6 +1,6 @@
-import { AccessoriesHP } from 'pages/homepage';
+import Home from 'pages/homepage';
 import { getInitialProps } from 'static';
 
-export default AccessoriesHP;
+export default Home;
 
-AccessoriesHP.getInitialProps = getInitialProps({ where: { type: 'accessories' } });
+Home.getInitialProps = getInitialProps({ type: 'accessories' });

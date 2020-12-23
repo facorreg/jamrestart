@@ -2,7 +2,9 @@ import React from 'react';
 import Image from 'next/image';
 import { useQuery } from '@apollo/client';
 import { HomeStyle, ProductStyle } from './homepage.style';
-import get from 'lodash/get';
+import { useScrollHandler } from 'ownHooks';
+import { getProducts } from 'queries';
+import { useRouter } from 'next/router';
 
 const Product = ({ product }) => {
   const { ref, name, price, images: { medium } } = product;
@@ -22,16 +24,29 @@ const Product = ({ product }) => {
   )
 }
 
-const HomePage = (props) => {
-  const { variables, query, type } = props;
-  const { loading, error, data = {} } = useQuery(query, { variables: variables?.products });
-  const field = `${type}Products`;
+const HomePage = () => {
+  const router = useRouter();
+  const type = router.pathname.slice(1);
+
+  const { loading, error, data = {}, fetchMore } = useQuery(
+    getProducts,
+    {
+      variables: {
+        limit: 10,
+        where: type ? { type } : {}
+      }
+    },
+  );
+
+  const { products: productList = [] } = data;
+  useScrollHandler({
+    limit: 10,
+    fetchMore,
+  })
 
   if (loading) return <>loading</>;
   if (error) return <>Error</>;
-  if (!data[field]?.length) return <>No product to display</>
-
-  const { [field]: productList } = data;
+  if (!productList.length) return <>No product to display</>
 
   return (
     <HomeStyle>
@@ -52,8 +67,4 @@ const HomePage = (props) => {
   );
 }
 
-const ClothesHP = (props) => <HomePage {...props} />;
-const AccessoriesHP = (props) => <HomePage {...props} />;
-
-export { ClothesHP, AccessoriesHP };
 export default HomePage;

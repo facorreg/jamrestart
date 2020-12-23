@@ -1,7 +1,6 @@
 import {
-  ApolloClient, HttpLink, InMemoryCache, concat, ApolloLink,
+  ApolloClient, HttpLink, InMemoryCache, concat, ApolloLink, defaultDataIdFromObject
 } from '@apollo/client';
-import { concatPagination } from '@apollo/client/utilities';
 import { getCookie, isServerSide } from 'utils';
 
 let apolloClient;
@@ -34,9 +33,11 @@ const createApolloClient = () => {
       typePolicies: {
         Query: {
           fields: {
-            allProducts: concatPagination(),
-            accessoriesProducts: concatPagination(),
-            clothesProducts: concatPagination(),
+            products: {
+              merge: (existing = [], incoming = []) => {
+                return [...existing, ...incoming]
+              }
+            },
           },
         },
       },
